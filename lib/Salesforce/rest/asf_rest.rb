@@ -48,23 +48,38 @@ module Salesforce
 
 
       # Initializes the adapter, the 1st step of using the adapter. A good place to invoke
-      # it includes 'setup()' method in the 'test_helper' and Rails init file.
-      # TODO, to be removed in the 1.0 version
+      # it includes 'setup()' method in the 'test_helper' and Rails init file.      
       # usage ->     bootup_rest_adapter()
       def self.bootup_rest_adapter()
-        require 'asf-soap-adapter'
-        p "*" * 80
-        p 'Set up code'
-        @u = Salesforce::User.first
-        @version = "v" + @u.connection.config[:api_version].to_s
-        puts "Sf User name is: " + @u.name
-
-        @oauth_token = @u.connection.binding.instance_variable_get("@session_id")
-        puts "oauth token is: " + @oauth_token
-
-        @soap_url = @u.connection.binding.instance_variable_get("@server").address
-        @rest_svr_url = @soap_url.gsub(/-api\S*/mi, "") + ".salesforce.com"
-        puts 'rest_svr_url' + @rest_svr_url
+        sf_config = YAML.load(File.read("#{::Rails.root.to_s}/config/salesforce.yml"))[::Rails.env]
+        
+        login_uri = URI.parse("#{sf_config['login_url']}/services/oauth2/token")    
+    
+        http = Net::HTTP.new(login_uri.host, login_uri.port)
+        http.use_ssl = true
+        
+        sf_login = Net::HTTP::Post.new(login_uri.request_uri)    
+        sf_login["Content-Type"] = "application/json"
+        
+        sf_login.set_form_data({
+          "grant_type"    => "password",
+          "client_id"     => sf_config["client_id"],
+          "client_secret" => sf_config["client_secret"],
+          "username"      => sf_config["username"],
+          "password"      => sf_config["password"]})
+        
+        login_resp = http.request(sf_login)
+        Rails.logger.info login_resp.to_s 
+        login_results = ActiveSupport::JSON.decode(login_resp.body)
+                
+        @oauth_token = login_results["access_token"]
+        Rails.logger.info "@oauth_token = #{@oauth_token}"
+        
+        @rest_svr_url = URI.parse(login_results["instance_url"]).host
+        Rails.logger.info "@rest_svr_url = #{@rest_svr_url}"
+        
+        @version = "v" + sf_config["api_version"].to_s
+        Rails.logger.info "@version = #{@version}"
 
         self.setup(@oauth_token, @rest_svr_url, @version)
       end
