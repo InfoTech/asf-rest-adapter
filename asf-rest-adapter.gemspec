@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{asf-rest-adapter}
-  s.version = "0.1.6"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Raymond Gao @ Are4Us Technologies"]
-  s.date = %q{2011-03-17}
+  s.date = %q{2011-03-21}
   s.description = %q{REST based adapter for Salesforce}
   s.email = %q{raygao2000@yahoo.com}
   s.extra_rdoc_files = [
@@ -139,6 +139,7 @@ Gem::Specification.new do |s|
     "test/asf-rest-adapter-rails-app/test/test_helper.rb",
     "test/asf-rest-adapter-rails-app/test/unit/helpers/homes_helper_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_create_delete.rb",
+    "test/asf-rest-adapter-rails-app/test/unit/rest_find_for_an_user_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_find_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_update_resource.rb",
     "test/asf-rest-adapter-rails-app/test/unit/salesforce/account_feed_test.rb",
@@ -219,7 +220,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/raygao/asf-rest-adapter}
   s.licenses = ["Apache 2.0"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.5.2}
   s.summary = %q{REST based adapter for Salesforce}
   s.test_files = [
     "test/asf-rest-adapter-rails-app/app/controllers/application_controller.rb",
@@ -245,54 +246,12 @@ Gem::Specification.new do |s|
     "test/asf-rest-adapter-rails-app/db/migrate/20110217042403_create_homes.rb",
     "test/asf-rest-adapter-rails-app/db/schema.rb",
     "test/asf-rest-adapter-rails-app/db/seeds.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/asf_connection.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/asf_rest.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/asf_rest_error.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/asf_rest_original.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/account.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/account_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/apex_log.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/asset.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/asset_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/campaign.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/campaign_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/case.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/case_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/case_team_member.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/case_team_role.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/contact.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/contact_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/contract.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/contract_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/entity_subscription.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/feed_comment.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/feed_post.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/feed_tracked_change.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/group.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/group_member.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/lead.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/lead_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/news_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/opportunity.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/opportunity_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/organization.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/product2.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/product2_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/solution.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/solution_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/solution_history.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/task.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/task_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/user.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/user_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/user_profile_feed.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/Salesforce/rest/classes/user_role.rb",
-    "test/asf-rest-adapter-rails-app/lib/tmp/asf-rest-adapter.rb",
     "test/asf-rest-adapter-rails-app/test/functional/homes_controller_test.rb",
     "test/asf-rest-adapter-rails-app/test/performance/browsing_test.rb",
     "test/asf-rest-adapter-rails-app/test/test_helper.rb",
     "test/asf-rest-adapter-rails-app/test/unit/helpers/homes_helper_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_create_delete.rb",
+    "test/asf-rest-adapter-rails-app/test/unit/rest_find_for_an_user_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_find_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_update_resource.rb",
     "test/asf-rest-adapter-rails-app/test/unit/salesforce/account_feed_test.rb",
@@ -343,18 +302,15 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_development_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_runtime_dependency(%q<asf-soap-adapter>, [">= 0"])
       s.add_runtime_dependency(%q<httparty>, [">= 0"])
     else
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
       s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-      s.add_dependency(%q<asf-soap-adapter>, [">= 0"])
       s.add_dependency(%q<httparty>, [">= 0"])
     end
   else
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
     s.add_dependency(%q<jeweler>, ["~> 1.5.2"])
-    s.add_dependency(%q<asf-soap-adapter>, [">= 0"])
     s.add_dependency(%q<httparty>, [">= 0"])
   end
 end
