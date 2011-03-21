@@ -39,12 +39,12 @@ module Salesforce
       include HTTParty
       # default REST API server
 
-      base_uri "https://na7.salesforce.com"
-      default_params :output => 'json'
-      format :json
+      # base_uri "https://na7.salesforce.com"
+      # default_params :output => 'json'
+      # format :json
 
 
-      self.site = "https://na7.salesforce.com/services/data/v21.0/sobjects"
+      # self.site = "https://na7.salesforce.com/services/data/v21.0/sobjects"
 
 
       # Initializes the adapter, the 1st step of using the adapter. A good place to invoke
@@ -98,16 +98,23 @@ module Salesforce
       def self.setup(oauth_token, base_url, api_version)
         @@oauth_token = oauth_token
         @@base_url = base_url
-        @@api_version = "v21.0"  #take a dynamic api server version
+        @@api_version = api_version
         @@rest_svr_url = base_url + "/services/data/#{api_version}/sobjects"
         @@ssl_port = 443  # TODO, a dynamic SSL port
-
-        self.site = "https://" +  @@rest_svr_url
+        
+        rest_host = "https://" +  base_url
+        
+        self.site = rest_host
         connection.set_header("Authorization", "OAuth " + @@oauth_token)
         @@auth_header = { "Authorization" => "OAuth " + @@oauth_token, "content-Type" => 'application/json' }
         # either application/xml or application/json
         self.format = :json
- 
+        
+        # setup httparty
+        base_uri rest_host
+        default_params :output => 'json'
+        format :json
+      
         return self
       end
 
@@ -348,12 +355,13 @@ module Salesforce
           return obj
         end
       end
-      # Run SOQL
+      # Run SOQL, automatically CGI::escape the query for you.
       def self.run_soql(query)
         headers @@auth_header
         #options = { :query => {:q => query}}
-        class_name = self.name.gsub(/\S+::/mi, "")
-        path = "/services/data/#{@@api_version}/query?q=#{query}"
+        class_name = self.name.gsub(/\S+::/mi, "")        
+        safe_query = CGI::escape(query)
+        path = "/services/data/#{@@api_version}/query?q=#{safe_query}"        
         resp = get(path)
         #resp = get(path, options)
         if (resp.code != 200) || !resp.success?
@@ -378,9 +386,44 @@ module Salesforce
           return obj
         end
       end
-      # Run SOSL
+      # Run SOSL, do not use CGI::escape -> SF will complain about missing {braces}
       def self.run_sosl(search)
         headers @@auth_header
+        options = { :query => {:q => search}}
+        class_name = self.name.gsub(/\S+::/mi, "")
+        path = URI.escape("/services/data/#{@@api_version}/search/?q=#{search}")
+        resp = get(path, options)
+        if (resp.code != 200) || !resp.success?
+          message = ActiveSupport::JSON.decode(resp.body)[0]["message"]
+          Salesforce::Rest::ErrorManager.raise_error("HTTP code " + resp.code.to_s + ": " + message, resp.code.to_s)
+        end
+        return resp
+      end
+
+      # Run SOSL, do not use CGI::escape -> SF will complain about missing {braces}
+      # This is for a single user -> Search_query, username, password
+      def self.run_sosl_for_an_user(search, username, password)
+        login_svr = 'https://login.salesforce.com'
+        api_version = '21.0'
+
+        uri = URI.parse(login_svr)
+        uri.path = "/services/Soap/u/" + (api_version).to_s
+        url = uri.to_s
+
+        binding = RForce::Binding.new(url, nil, nil)
+        soap_response = binding.login(username, password)
+        soap_server_url = soap_response.loginResponse.result.serverUrl
+        security_token = soap_response.loginResponse.result.sessionId
+        user_id = soap_response.loginResponse.result.userId
+        puts "binding user id is: " + user_id
+
+        rest_svr = soap_server_url.gsub(/-api\S*/mi, "") + ".salesforce.com"
+        version = "v" + api_version
+
+        setup(security_token, rest_svr, version)
+
+        headers @@auth_header
+        
         options = { :query => {:q => search}}
         class_name = self.name.gsub(/\S+::/mi, "")
         path = URI.escape("/services/data/#{@@api_version}/search/?q=#{search}")

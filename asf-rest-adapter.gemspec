@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{asf-rest-adapter}
-  s.version = "0.1.5"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Raymond Gao @ Are4Us Technologies"]
-  s.date = %q{2011-03-16}
+  s.date = %q{2011-03-21}
   s.description = %q{REST based adapter for Salesforce}
   s.email = %q{raygao2000@yahoo.com}
   s.extra_rdoc_files = [
@@ -139,6 +139,7 @@ Gem::Specification.new do |s|
     "test/asf-rest-adapter-rails-app/test/test_helper.rb",
     "test/asf-rest-adapter-rails-app/test/unit/helpers/homes_helper_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_create_delete.rb",
+    "test/asf-rest-adapter-rails-app/test/unit/rest_find_for_an_user_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_find_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_update_resource.rb",
     "test/asf-rest-adapter-rails-app/test/unit/salesforce/account_feed_test.rb",
@@ -250,6 +251,7 @@ Gem::Specification.new do |s|
     "test/asf-rest-adapter-rails-app/test/test_helper.rb",
     "test/asf-rest-adapter-rails-app/test/unit/helpers/homes_helper_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_create_delete.rb",
+    "test/asf-rest-adapter-rails-app/test/unit/rest_find_for_an_user_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_find_test.rb",
     "test/asf-rest-adapter-rails-app/test/unit/rest_update_resource.rb",
     "test/asf-rest-adapter-rails-app/test/unit/salesforce/account_feed_test.rb",
