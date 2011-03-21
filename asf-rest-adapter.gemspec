@@ -220,7 +220,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/raygao/asf-rest-adapter}
   s.licenses = ["Apache 2.0"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.5.2}
   s.summary = %q{REST based adapter for Salesforce}
   s.test_files = [
     "test/asf-rest-adapter-rails-app/app/controllers/application_controller.rb",
