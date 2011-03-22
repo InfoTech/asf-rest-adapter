@@ -104,7 +104,8 @@ module Salesforce
         
         rest_host = "https://" +  base_url
         
-        self.site = rest_host
+        # self.site = rest_host
+        self.site = "https://" + @@rest_svr_url
         connection.set_header("Authorization", "OAuth " + @@oauth_token)
         @@auth_header = { "Authorization" => "OAuth " + @@oauth_token, "content-Type" => 'application/json' }
         # either application/xml or application/json
