@@ -50,8 +50,10 @@ module Salesforce
       # Initializes the adapter, the 1st step of using the adapter. A good place to invoke
       # it includes 'setup()' method in the 'test_helper' and Rails init file.      
       # usage ->     bootup_rest_adapter()
-      def self.bootup_rest_adapter()
-        sf_config = YAML.load(File.read("#{::Rails.root.to_s}/config/salesforce.yml"))[::Rails.env]
+      def self.bootup_rest_adapter(config_path = nil)
+        config_path = "#{::Rails.root.to_s}/config/salesforce.yml" if config_path.nil?
+        
+        sf_config = YAML.load(File.read(config_path))[::Rails.env]
         
         login_uri = URI.parse("#{sf_config['login_url']}/services/oauth2/token")    
     
@@ -67,7 +69,7 @@ module Salesforce
           "client_secret" => sf_config["client_secret"],
           "username"      => sf_config["username"],
           "password"      => sf_config["password"]})
-        
+        Rails.logger.info sf_login
         login_resp = http.request(sf_login)
         Rails.logger.info login_resp.to_s 
         login_results = ActiveSupport::JSON.decode(login_resp.body)
@@ -370,6 +372,13 @@ module Salesforce
           Salesforce::Rest::ErrorManager.raise_error("HTTP code " + resp.code.to_s + ": " + message, resp.code.to_s)
         end
         return resp
+      end
+      
+      def self.get_soql_records(query)
+        resp = self.run_soql(query)
+        parsed_resp = ActiveSupport::JSON.decode resp.body
+        records = parsed_resp["records"]
+        return records
       end
 
       # Memcached version of the run_sosl() method
